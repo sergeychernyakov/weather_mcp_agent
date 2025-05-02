@@ -23,6 +23,39 @@ This project demonstrates a complete setup of a FastAPI-based MCP (Model Context
 
 ---
 
+### 1. Clone the Repository
+
+Begin by cloning the repository to your local machine:
+
+```bash
+git clone git@github.com:sergeychernyakov/weather_mcp_agent.git
+cd weather_mcp_agent
+```
+
+### 2. Create a Virtual Environment
+
+It's recommended to use a virtual environment to manage dependencies:
+
+```bash
+python3 -m venv .venv
+```
+
+### 3. Activate the Virtual Environment
+
+Activate the virtual environment before installing dependencies.
+
+- **Linux/MacOS:**
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+- **Windows:**
+
+    ```bash
+    .venv\Scripts\activate
+    ```
+
 ## Installing Dependencies
 
 Requires **Python 3.12+** and [uv](https://github.com/astral-sh/uv) or `uvicorn`.
