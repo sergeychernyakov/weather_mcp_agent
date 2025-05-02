@@ -148,56 +148,45 @@ Shows connection logs, SSE events, and tool calls.
 
 ---
 
-## 🧑‍💻 Using with ChatGPT Assistants
+## 🧑‍💻 Using with ChatGPT (Function Calling via OpenAPI)
 
-You have two main options to let ChatGPT talk to your weather tools:
+You can use this server with ChatGPT custom GPTs or assistants that support OpenAPI schema-based tool calling.
 
-### 1. ChatGPT Plugin via OpenAPI
+### 1. Expose your server publicly
 
-1. **Create a plugin manifest file** `ai-plugin.json` in your project root:
+Run `ngrok` to expose your local FastAPI server:
 
-```json
-{
-  "schema_version": "v1",
-  "name_for_human": "Weather MCP Agent",
-  "name_for_model": "weather_agent",
-  "description_for_human": "Get weather alerts & forecasts",
-  "description_for_model": "Plugin for fetching weather alerts and forecasts via SSE.",
-  "auth": { "type": "none" },
-  "api": {
-    "type": "openapi",
-    "url": "http://localhost:8000/openapi.json",
-    "is_user_authenticated": false
-  },
-  "logo_url": "http://localhost:8000/logo.png",
-  "contact_email": "you@example.com",
-  "legal_info_url": "http://example.com/legal"
-}
+```bash
+ngrok http 8000
 ```
 
-2. **Serve that file** (and your OpenAPI spec) by mounting the `.well-known` folder in `src/main.py`:
-
-```python
-from fastapi.staticfiles import StaticFiles
-
-app.mount("/.well-known", StaticFiles(directory="."), name="well-known")
-```
-
-Now available at:
-- http://localhost:8000/.well-known/ai-plugin.json
-- http://localhost:8000/openapi.json
-
-3. **Expose your server publicly** (reverse proxy, or `ngrok http 8000`) so ChatGPT can reach it.
-4. **In ChatGPT UI**: Plugins → Develop your own → From URL, and enter:
+This will provide you with a public HTTPS URL like:
 
 ```
-https://<your-domain>/.well-known/ai-plugin.json
+https://127c-156-253-249-23.ngrok-free.app
 ```
 
-Activate the plugin, then ask:
-> What are the active weather alerts in Texas?
+### 2. Import OpenAPI in GPT Builder
 
-ChatGPT will discover `get_weather_alerts(state: string)` and call it.
+1. Open [ChatGPT → Explore GPTs](https://chat.openai.com/gpts).
+2. Choose your custom GPT or create a new one.
+3. Under **"Actions"** → click **"Import from URL"**.
+4. Paste:
+
+```
+https://127c-156-253-249-23.ngrok-free.app/openapi.json
+```
+
+5. ChatGPT will fetch the schema and automatically detect:
+
+* `get_weather_alerts(state: string)`
+* `get_weather_forecast(latitude: number, longitude: number)`
+
+6. Save and try asking:
+
+> What's the weather forecast in New York?
+
+ChatGPT will invoke your FastAPI MCP server and return the result.
 
 ---
 
@@ -236,14 +225,3 @@ The model will then invoke your `/messages` → `/sse` pipeline under the hood a
 
 **Sergey Chernyakov**  
 📬 Telegram: [@AIBotsTech](https://t.me/AIBotsTech)
-
-
-8698vk3n8 MCP - Data Sheets
-+ create an example whether mcp server
-+ create an example mcp client using fast-agent-mcp
-
-add the mcp server to changpt and use it
-
-create an example mcp client using fast-agent-mcp
-make crm-aq mcp server using FastAPI-MCP
-add the crm-aq mcp serverto changpt and use it - create Demo
