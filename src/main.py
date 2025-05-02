@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from mcp.server.sse import SseServerTransport
 from starlette.routing import Mount
-from weather import mcp
+from src.weather import mcp
 
 # Create FastAPI application with metadata
 app = FastAPI(
@@ -54,4 +54,4 @@ async def handle_sse(request: Request):
 
 # Import routes at the end to avoid circular imports
 # This ensures all routes are registered to the app
-import routes  # noqa
+import src.routes  # noqa
