@@ -8,7 +8,7 @@ from src.main import app
 router = APIRouter(tags=["General"])
 
 
-@router.get("/")
+@router.get("/", include_in_schema=False)
 async def homepage():
     """Root endpoint that returns a simple HTML welcome page"""
     html_content = (
@@ -18,7 +18,7 @@ async def homepage():
     return HTMLResponse(html_content)
 
 
-@router.get("/about")
+@router.get("/about", include_in_schema=False)
 async def about():
     """About endpoint that returns information about the application"""
     return PlainTextResponse(
@@ -27,7 +27,7 @@ async def about():
     )
 
 
-@router.get("/status")
+@router.get("/status", include_in_schema=False)
 async def status():
     """Status endpoint that returns the current server status"""
     status_info = {

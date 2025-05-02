@@ -2,10 +2,13 @@
 
 from typing import Any
 import httpx
+from fastapi import APIRouter
 from mcp.server.fastmcp import FastMCP
 
 # Initialize FastMCP server
 mcp = FastMCP("weather")
+
+router = APIRouter(prefix="/weather", tags=["Weather"])
 
 # Constants
 NWS_API_BASE = "https://api.weather.gov"
@@ -56,6 +59,16 @@ async def get_weather_alerts(state: str) -> str:
     return "\n---\n".join(alerts)
 
 
+@router.get(
+    "/alerts",
+    operation_id="get_weather_alerts",
+    summary="Get Weather Alerts",
+)
+async def weather_alerts_route(state: str):
+    """HTTP wrapper that exposes get_weather_alerts as a REST endpoint."""
+    return await get_weather_alerts(state)
+
+
 @mcp.tool()
 async def get_weather_forecast(latitude: float, longitude: float) -> str:
     """Get weather forecast for a location.
@@ -91,6 +104,16 @@ async def get_weather_forecast(latitude: float, longitude: float) -> str:
         forecasts.append(forecast)
 
     return "\n---\n".join(forecasts)
+
+
+@router.get(
+    "/forecast",
+    operation_id="get_weather_forecast",
+    summary="Get Weather Forecast",
+)
+async def weather_forecast_route(latitude: float, longitude: float):
+    """HTTP wrapper that exposes get_weather_forecast as a REST endpoint."""
+    return await get_weather_forecast(latitude, longitude)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from mcp.server.sse import SseServerTransport
 from starlette.routing import Mount
-from src.weather import mcp
+from src.weather import mcp, router as weather_router
 
 # Create FastAPI application with metadata
 app = FastAPI(
@@ -9,6 +10,7 @@ app = FastAPI(
     description="A demonstration of Server-Sent Events with Model Context "
     "Protocol integration",
     version="0.1.0",
+    servers=[{"url": "https://127c-156-253-249-23.ngrok-free.app"}],
 )
 
 # Create SSE transport instance for handling server-sent events
@@ -19,7 +21,7 @@ app.router.routes.append(Mount("/messages", app=sse.handle_post_message))
 
 
 # Add documentation for the /messages endpoint
-@app.get("/messages", tags=["MCP"], include_in_schema=True)
+@app.get("/messages", tags=["MCP"], include_in_schema=False)
 def messages_docs():
     """
     Messages endpoint for SSE communication
@@ -31,7 +33,7 @@ def messages_docs():
     pass  # This is just for documentation, the actual handler is mounted above
 
 
-@app.get("/sse", tags=["MCP"])
+@app.get("/sse", tags=["MCP"], include_in_schema=False)
 async def handle_sse(request: Request):
     """
     SSE endpoint that connects to the MCP server
@@ -51,7 +53,8 @@ async def handle_sse(request: Request):
             mcp._mcp_server.create_initialization_options(),
         )
 
-
+# Include Weather API endpoints in the main app
+app.include_router(weather_router)
 # Import routes at the end to avoid circular imports
 # This ensures all routes are registered to the app
 import src.routes  # noqa

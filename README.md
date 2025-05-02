@@ -236,3 +236,14 @@ The model will then invoke your `/messages` → `/sse` pipeline under the hood a
 
 **Sergey Chernyakov**  
 📬 Telegram: [@AIBotsTech](https://t.me/AIBotsTech)
+
+
+8698vk3n8 MCP - Data Sheets
++ create an example whether mcp server
++ create an example mcp client using fast-agent-mcp
+
+add the mcp server to changpt and use it
+
+create an example mcp client using fast-agent-mcp
+make crm-aq mcp server using FastAPI-MCP
+add the crm-aq mcp serverto changpt and use it - create Demo
